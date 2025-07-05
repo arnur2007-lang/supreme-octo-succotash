@@ -38,16 +38,21 @@ def summary_report():
     with open(FILENAME, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            amount = float(row['Amount'])
-            if row['Type'].lower() == 'income':
-                income += amount
-            elif row['Type'].lower() == 'expense':
-                expenses += amount
+            try:
+                amount = float(row['Amount'])
+                if row['Type'].lower() == 'income':
+                    income += amount
+                elif row['Type'].lower() == 'expense':
+                    expenses += amount
+            except ValueError:
+                continue  # Skip rows with invalid numeric input
+
+    savings = income - expenses
 
     print("\nSummary Report:")
-    print(f"Total Income  : ${income:.2f}")
-    print(f"Total Expenses: ${expenses:.2f}")
-    print(f"Savings       : ${income - expenses:.2f}\n")
+    print("Total Income   :", "$" + str(round(income, 2)))
+    print("Total Expenses :", "$" + str(round(expenses, 2)))
+    print("Savings        :", "$" + str(round(savings, 2)), "\n")
 
 # Menu
 print("Welcome to Budget Tracker")
@@ -61,3 +66,4 @@ elif choice == '3':
     summary_report()
 else:
     print("Invalid choice. Please select 1, 2, or 3.")
+
